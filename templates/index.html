@@ -1157,10 +1157,10 @@
 
             const reader = new FileReader();
             reader.onload = (event) => {
-                const base64Data = event.target.result;
+                const rawBase64 = event.target.result;
                 
                 // Show uploaded image preview inside viewfinder
-                uploadedPreview.src = base64Data;
+                uploadedPreview.src = rawBase64;
                 uploadedPreview.style.display = 'block';
                 webcam.style.display = 'none';
                 
@@ -1175,8 +1175,37 @@
                 btnResetCamera.style.display = 'flex';
                 btnCapture.disabled = true;
                 
-                // Run prediction on uploaded file immediately
-                analyzeBase64Image(base64Data.split(',')[1]);
+                // Resize the image in the browser before uploading to prevent server OOM crashes
+                const img = new Image();
+                img.onload = () => {
+                    // Target max dimension of 640px to match standard webcam resolution
+                    const maxDim = 640;
+                    let width = img.width;
+                    let height = img.height;
+                    
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) {
+                            height = Math.round((height * maxDim) / width);
+                            width = maxDim;
+                        } else {
+                            width = Math.round((width * maxDim) / height);
+                            height = maxDim;
+                        }
+                    }
+                    
+                    // Create temporary canvas to draw the resized image
+                    const tempCanvas = document.createElement('canvas');
+                    tempCanvas.width = width;
+                    tempCanvas.height = height;
+                    const ctx = tempCanvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    const resizedBase64 = tempCanvas.toDataURL('image/jpeg', 0.85);
+                    
+                    // Run prediction on resized uploaded file immediately
+                    analyzeBase64Image(resizedBase64.split(',')[1]);
+                };
+                img.src = rawBase64;
             };
             reader.readAsDataURL(file);
         });
