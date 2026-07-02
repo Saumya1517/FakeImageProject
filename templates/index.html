@@ -3,32 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real vs. Fake Image Detection Dashboard</title>
-    <!-- Premium Google Fonts -->
+    <title>Screen-Retake Image Verification</title>
+    <!-- Premium Professional Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-color: #0b0d13;
-            --card-bg: rgba(22, 28, 45, 0.45);
-            --card-border: rgba(255, 255, 255, 0.08);
+            /* Vercel/Linear-inspired modern dark theme palette */
+            --bg-color: #08090d;
+            --card-bg: #11131c;
+            --card-border: #1f2230;
+            --card-hover-border: #2f3347;
+            
             --text-primary: #f3f4f6;
-            --text-secondary: #9ca3af;
+            --text-secondary: #8e95a5;
+            --text-tertiary: #525866;
+            
+            /* Professional state colors */
+            --color-indigo: #4f46e5;
+            --color-indigo-hover: #4338ca;
+            --color-indigo-glow: rgba(79, 70, 229, 0.2);
             
             --color-real: #10b981;
-            --color-real-glow: rgba(16, 185, 129, 0.4);
+            --color-real-glow: rgba(16, 185, 129, 0.15);
             --color-fake: #ef4444;
-            --color-fake-glow: rgba(239, 68, 68, 0.4);
+            --color-fake-glow: rgba(239, 68, 68, 0.15);
+            --color-warning: #f59e0b;
             
-            --color-cyan: #06b6d4;
-            --color-cyan-glow: rgba(6, 182, 212, 0.4);
-            --color-accent: #8b5cf6;
-            --color-accent-glow: rgba(139, 92, 246, 0.3);
-            
-            --font-main: 'Outfit', sans-serif;
-            --font-mono: 'Share Tech Mono', monospace;
+            --font-main: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
         }
 
         * {
@@ -46,17 +51,19 @@
             flex-direction: column;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(at 0% 0%, rgba(6, 182, 212, 0.15) 0px, transparent 50%),
-                radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
+                radial-gradient(circle at 10% 20%, rgba(79, 70, 229, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
+            -webkit-font-smoothing: antialiased;
         }
 
+        /* Clean, human-designed Header */
         header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 1.5rem 2rem;
+            padding: 1.25rem 2.5rem;
+            background: rgba(8, 9, 13, 0.8);
             border-bottom: 1px solid var(--card-border);
-            background: rgba(11, 13, 19, 0.8);
             backdrop-filter: blur(12px);
             z-index: 10;
         }
@@ -68,47 +75,43 @@
         }
 
         .logo-icon {
-            width: 2.5rem;
-            height: 2.5rem;
-            background: linear-gradient(135deg, var(--color-cyan), var(--color-accent));
+            width: 2.25rem;
+            height: 2.25rem;
+            background: linear-gradient(135deg, var(--color-indigo), #818cf8);
             border-radius: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 15px var(--color-cyan-glow);
         }
 
         .logo-icon svg {
-            width: 1.5rem;
-            height: 1.5rem;
+            width: 1.25rem;
+            height: 1.25rem;
             fill: white;
         }
 
         .header-title h1 {
-            font-size: 1.25rem;
+            font-size: 1.15rem;
             font-weight: 700;
-            letter-spacing: 0.05em;
-            background: linear-gradient(to right, #ffffff, var(--text-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #ffffff;
+            letter-spacing: -0.02em;
         }
 
         .header-title p {
             font-size: 0.75rem;
-            color: var(--color-cyan);
-            font-family: var(--font-mono);
-            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            font-weight: 500;
             margin-top: 0.1rem;
         }
 
         .device-badge {
-            background: rgba(6, 182, 212, 0.1);
-            border: 1px solid rgba(6, 182, 212, 0.3);
-            border-radius: 2rem;
-            padding: 0.4rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
             font-size: 0.75rem;
             font-family: var(--font-mono);
-            color: var(--color-cyan);
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -119,26 +122,24 @@
             height: 6px;
             border-radius: 50%;
             background-color: var(--color-real);
-            box-shadow: 0 0 8px var(--color-real);
-            animation: pulse 2s infinite;
+            box-shadow: 0 0 6px var(--color-real);
         }
 
-        @keyframes pulse {
-            0% { opacity: 0.3; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-
-        /* Tabs Navigation Styling */
-        .tabs-nav {
+        /* Pill-shaped Tab Switcher */
+        .tabs-nav-container {
             display: flex;
             justify-content: center;
-            gap: 1.5rem;
-            margin-top: 1.5rem;
+            margin-top: 2rem;
             margin-bottom: 0.5rem;
-            border-bottom: 1px solid var(--card-border);
-            background: rgba(11, 13, 19, 0.4);
-            backdrop-filter: blur(10px);
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--card-border);
+            padding: 0.25rem;
+            border-radius: 0.75rem;
+            gap: 0.25rem;
         }
 
         .tab-btn {
@@ -146,94 +147,92 @@
             border: none;
             color: var(--text-secondary);
             font-family: var(--font-main);
-            font-size: 0.95rem;
+            font-size: 0.85rem;
             font-weight: 600;
-            padding: 0.75rem 2rem;
+            padding: 0.6rem 1.5rem;
             cursor: pointer;
-            position: relative;
-            transition: all 0.3s ease;
-            letter-spacing: 0.08em;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
         }
 
         .tab-btn:hover {
             color: #ffffff;
+            background: rgba(255, 255, 255, 0.02);
         }
 
         .tab-btn.active {
-            color: var(--color-cyan);
-            text-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
-        }
-
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -1px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, var(--color-cyan), var(--color-accent));
-            border-radius: 3px 3px 0 0;
-            box-shadow: 0 0 10px var(--color-cyan-glow);
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .tab-content {
             display: none;
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
             width: 100%;
-            padding: 2rem;
+            padding: 2rem 2.5rem;
         }
 
         .tab-content.active {
             display: grid;
-            animation: fadeIn 0.4s ease-out;
+            animation: fadeIn 0.3s ease-out;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(4px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Layout Grid for Live Scanner */
+        /* Layout Grid */
         #live-scanner-tab {
-            grid-template-columns: 1.2fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2.5rem;
         }
 
-        /* Layout Grid for Benchmarks */
         #benchmarks-tab {
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            grid-template-columns: 1.1fr 1fr;
+            gap: 2.5rem;
         }
 
         @media (max-width: 968px) {
             #live-scanner-tab, #benchmarks-tab {
                 grid-template-columns: 1fr;
+                gap: 2rem;
             }
         }
 
-        /* Viewport Container & Camera feed */
+        /* Clean Viewfinder and Controls */
         .camera-container {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 1.25rem;
-            padding: 1.5rem;
+            border-radius: 1rem;
+            padding: 1.75rem;
             display: flex;
             flex-direction: column;
             gap: 1.5rem;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-heading {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            letter-spacing: -0.01em;
         }
 
         .viewfinder-wrapper {
             position: relative;
             aspect-ratio: 4/3;
             width: 100%;
-            background: #000;
+            background: #000000;
             border-radius: 0.75rem;
             overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
         }
 
         #webcam {
@@ -247,77 +246,30 @@
             transform: scaleX(-1);
         }
 
-        /* Scan Line Overlay Effect */
-        .scanner-line {
+        /* Subtle focus frame layout */
+        .viewfinder-frame {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background: linear-gradient(to right, transparent, var(--color-cyan), transparent);
-            box-shadow: 0 0 12px 3px var(--color-cyan-glow);
-            z-index: 5;
-            animation: scan 4s linear infinite;
-            display: none;
-        }
-
-        .scanner-grid {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(6, 182, 212, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(6, 182, 212, 0.03) 1px, transparent 1px);
-            background-size: 30px 30px;
+            top: 2rem;
+            left: 2rem;
+            right: 2rem;
+            bottom: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            pointer-events: none;
             z-index: 2;
-            pointer-events: none;
         }
-
-        .scanner-corners {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-            pointer-events: none;
-            box-shadow: inset 0 0 40px rgba(6, 182, 212, 0.1);
-        }
-
-        .scanner-corners::before,
-        .scanner-corners::after,
-        .scanner-corners-bottom::before,
-        .scanner-corners-bottom::after {
+        
+        .viewfinder-frame::before,
+        .viewfinder-frame::after {
             content: '';
             position: absolute;
-            width: 24px;
-            height: 24px;
-            border-color: rgba(6, 182, 212, 0.6);
+            width: 12px;
+            height: 12px;
+            border-color: rgba(255, 255, 255, 0.5);
             border-style: solid;
         }
-
-        .scanner-corners::before { top: 12px; left: 12px; border-width: 2px 0 0 2px; border-radius: 4px 0 0 0; }
-        .scanner-corners::after { top: 12px; right: 12px; border-width: 2px 2px 0 0; border-radius: 0 4px 0 0; }
-        
-        .scanner-corners-bottom {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 3;
-            pointer-events: none;
-        }
-        .scanner-corners-bottom::before { bottom: 12px; left: 12px; border-width: 0 0 2px 2px; border-radius: 0 0 0 4px; }
-        .scanner-corners-bottom::after { bottom: 12px; right: 12px; border-width: 0 2px 2px 0; border-radius: 0 0 4px 0; }
-
-        @keyframes scan {
-            0% { top: 0%; }
-            50% { top: 100%; }
-            100% { top: 0%; }
-        }
+        .viewfinder-frame::before { top: -2px; left: -2px; border-width: 2px 0 0 2px; }
+        .viewfinder-frame::after { bottom: -2px; right: -2px; border-width: 0 2px 2px 0; }
 
         .camera-controls {
             display: flex;
@@ -326,60 +278,58 @@
             align-items: center;
         }
 
+        /* Clean modern buttons */
         .btn {
-            background: linear-gradient(135deg, var(--color-cyan), var(--color-accent));
-            color: white;
+            background: #ffffff;
+            color: #000000;
             border: none;
-            border-radius: 0.75rem;
-            padding: 0.9rem 2.5rem;
-            font-size: 1rem;
+            border-radius: 0.6rem;
+            padding: 0.85rem 2rem;
+            font-size: 0.9rem;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.75rem;
-            box-shadow: 0 4px 20px var(--color-cyan-glow);
-            letter-spacing: 0.05em;
+            gap: 0.6rem;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(6, 182, 212, 0.6);
-            filter: brightness(1.1);
+        .btn:hover:not(:disabled) {
+            background: #f3f4f6;
+            transform: translateY(-1px);
         }
 
         .btn:active {
-            transform: translateY(1px);
+            transform: translateY(0);
         }
 
         .btn:disabled {
-            background: #272d3d;
+            background: #1f2230;
+            color: var(--text-tertiary);
             box-shadow: none;
             cursor: not-allowed;
-            color: var(--text-secondary);
         }
 
         .camera-actions-row {
             display: flex;
             gap: 1rem;
             width: 100%;
-            justify-content: space-between;
         }
 
         .btn-sub {
             flex: 1;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid var(--card-border);
-            color: var(--text-primary);
-            border-radius: 0.75rem;
-            padding: 0.75rem 1rem;
-            font-size: 0.85rem;
-            font-weight: 500;
+            color: var(--text-secondary);
+            border-radius: 0.6rem;
+            padding: 0.7rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -387,18 +337,17 @@
         }
 
         .btn-sub:hover:not(:disabled) {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--color-cyan);
-            box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--card-hover-border);
             color: #ffffff;
         }
 
         .btn-sub:disabled {
-            opacity: 0.4;
+            opacity: 0.3;
             cursor: not-allowed;
         }
 
-        /* Results & Metrics Panel */
+        /* Results & Dashboard Layout */
         .results-container {
             display: flex;
             flex-direction: column;
@@ -408,71 +357,59 @@
         .card {
             background: var(--card-bg);
             border: 1px solid var(--card-border);
-            border-radius: 1.25rem;
-            padding: 1.5rem;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: border 0.3s ease;
+            border-radius: 1rem;
+            padding: 1.75rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transition: border-color 0.3s ease;
         }
 
-        .card-title {
-            font-size: 0.875rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-secondary);
-            font-weight: 600;
-            margin-bottom: 1.25rem;
+        /* Clean Gauge Layout */
+        .prediction-card {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-
-        /* Prediction Card design */
-        .prediction-card {
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 1.5rem;
-            align-items: center;
-            min-height: 220px;
+            gap: 2rem;
+            min-height: 120px;
         }
 
         @media (max-width: 480px) {
             .prediction-card {
-                grid-template-columns: 1fr;
-                justify-items: center;
+                flex-direction: column;
+                align-items: center;
                 text-align: center;
+                gap: 1.5rem;
             }
         }
 
         .score-circle {
             position: relative;
-            width: 140px;
-            height: 140px;
+            width: 110px;
+            height: 110px;
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
         }
 
         .score-circle svg {
-            width: 140px;
-            height: 140px;
+            width: 110px;
+            height: 110px;
             transform: rotate(-90deg);
         }
 
         .circle-bg {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.05);
-            stroke-width: 10px;
+            stroke: rgba(255, 255, 255, 0.03);
+            stroke-width: 8px;
         }
 
         .circle-progress {
             fill: none;
-            stroke: var(--color-cyan);
-            stroke-width: 10px;
+            stroke: var(--color-indigo);
+            stroke-width: 8px;
             stroke-linecap: round;
-            stroke-dasharray: 408.4;
-            stroke-dashoffset: 408.4;
-            transition: stroke-dashoffset 1.5s cubic-bezier(0.1, 0.8, 0.2, 1), stroke 0.5s ease;
+            stroke-dasharray: 314.16;
+            stroke-dashoffset: 314.16;
+            transition: stroke-dashoffset 1.2s cubic-bezier(0.1, 0.8, 0.2, 1), stroke 0.3s ease;
         }
 
         .score-text {
@@ -483,96 +420,100 @@
         }
 
         .score-percent {
-            font-size: 1.75rem;
+            font-size: 1.45rem;
             font-weight: 700;
             color: #ffffff;
             font-family: var(--font-mono);
         }
 
         .score-label {
-            font-size: 0.65rem;
+            font-size: 0.55rem;
             color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-top: -0.2rem;
+            letter-spacing: 0.05em;
+            font-weight: 700;
+            margin-top: -0.1rem;
         }
 
         .prediction-info {
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
 
         .status-badge {
-            font-size: 2rem;
-            font-weight: 800;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            font-family: var(--font-mono);
-            transition: all 0.3s ease;
+            font-size: 1.35rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+            transition: color 0.3s ease;
         }
 
-        .status-badge.real {
-            color: var(--color-real);
-            text-shadow: 0 0 15px var(--color-real-glow);
-        }
-
-        .status-badge.fake {
-            color: var(--color-fake);
-            text-shadow: 0 0 15px var(--color-fake-glow);
-        }
-
+        .status-badge.real { color: var(--color-real); }
+        .status-badge.fake { color: var(--color-fake); }
+        
         .status-badge.waiting {
             color: var(--text-secondary);
-            font-size: 1.5rem;
+            font-size: 1.1rem;
             animation: breathe 2s infinite;
         }
 
         @keyframes breathe {
-            0% { opacity: 0.4; }
-            50% { opacity: 0.8; }
-            100% { opacity: 0.4; }
+            0% { opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { opacity: 0.5; }
         }
 
         .status-desc {
             font-size: 0.85rem;
             color: var(--text-secondary);
-            line-height: 1.4;
+            line-height: 1.5;
+        }
+
+        /* Metric Item Design */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
         }
 
         .metric-item {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px solid var(--card-border);
             border-radius: 0.75rem;
-            padding: 1.2rem;
+            padding: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .metric-content {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.25rem;
         }
 
         .metric-label {
             font-size: 0.75rem;
             color: var(--text-secondary);
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
 
-        .metric-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            font-family: var(--font-mono);
-        }
-
-        .metric-value.cyan { color: var(--color-cyan); }
-        .metric-value.accent { color: var(--color-accent); }
-
         .metric-comparison {
             font-size: 0.75rem;
-            color: var(--text-secondary);
-            margin-top: 0.1rem;
+            color: var(--text-tertiary);
         }
 
-        /* Cost Table Card */
+        .metric-value {
+            font-size: 1.45rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            color: #ffffff;
+        }
+
+        /* Borderless Tables */
         .cost-table {
             width: 100%;
             border-collapse: collapse;
@@ -581,19 +522,22 @@
 
         .cost-table th, .cost-table td {
             text-align: left;
-            padding: 0.6rem 0.8rem;
+            padding: 0.8rem 1rem;
             font-size: 0.825rem;
         }
 
         .cost-table th {
             color: var(--text-secondary);
-            font-weight: 500;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--card-border);
         }
 
         .cost-table td {
             font-family: var(--font-mono);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
         }
 
         .cost-table tr:last-child td {
@@ -601,27 +545,27 @@
         }
 
         .cost-highlight {
-            font-weight: 700;
+            font-weight: 600;
         }
         .cost-highlight.on-device { color: var(--color-real); }
-        .cost-highlight.ec2 { color: var(--color-accent); }
+        .cost-highlight.ec2 { color: var(--color-indigo); }
 
-        /* Scanning State Animations */
+        /* Loader Overlay */
         .capturing-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(6, 182, 212, 0.15);
-            backdrop-filter: blur(2px);
+            background: rgba(8, 9, 13, 0.6);
+            backdrop-filter: blur(4px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.3s ease;
+            transition: opacity 0.25s ease;
         }
 
         .capturing-overlay.active {
@@ -629,12 +573,12 @@
         }
 
         .spinner {
-            width: 3rem;
-            height: 3rem;
-            border: 3px solid rgba(6, 182, 212, 0.2);
-            border-top: 3px solid var(--color-cyan);
+            width: 2.25rem;
+            height: 2.25rem;
+            border: 2px solid rgba(255, 255, 255, 0.05);
+            border-top: 2px solid #ffffff;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -642,7 +586,7 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Benchmark tab components */
+        /* System Benchmarks tab details */
         .bench-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -656,16 +600,16 @@
         
         .bench-card {
             background: rgba(255, 255, 255, 0.01);
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--card-border);
             border-radius: 0.75rem;
-            padding: 1.25rem;
+            padding: 1.5rem;
         }
         
         .bench-heading {
-            font-size: 0.9rem;
-            color: var(--color-cyan);
-            font-weight: 600;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 0.8rem;
+            color: #ffffff;
+            font-weight: 700;
+            border-bottom: 1px solid var(--card-border);
             padding-bottom: 0.5rem;
             margin-bottom: 1rem;
             text-transform: uppercase;
@@ -676,18 +620,19 @@
             list-style: none;
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.85rem;
         }
 
         .stats-item {
             display: flex;
             justify-content: space-between;
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
-            padding-bottom: 0.4rem;
+            padding-bottom: 0.5rem;
         }
         .stats-item:last-child {
             border-bottom: none;
+            padding-bottom: 0;
         }
 
         .stats-label {
@@ -700,22 +645,22 @@
             color: var(--text-primary);
         }
         .stats-value.highlight {
-            color: var(--color-cyan);
+            color: var(--color-real);
         }
 
         footer {
             padding: 1.5rem;
             text-align: center;
             font-size: 0.75rem;
-            color: var(--text-secondary);
+            color: var(--text-tertiary);
             border-top: 1px solid var(--card-border);
             margin-top: auto;
-            background: rgba(11, 13, 19, 0.5);
+            background: rgba(8, 9, 13, 0.4);
             backdrop-filter: blur(10px);
         }
 
         .footer-content {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
             display: flex;
             justify-content: space-between;
@@ -726,7 +671,7 @@
         @media (max-width: 640px) {
             .footer-content {
                 flex-direction: column;
-                gap: 0.75rem;
+                gap: 0.5rem;
                 text-align: center;
             }
         }
@@ -737,13 +682,13 @@
     <header>
         <div class="header-logo">
             <div class="logo-icon">
-                <svg viewBox="0 0 24 24">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="#ffffff"/>
                 </svg>
             </div>
             <div class="header-title">
-                <h1>SCREEN-RETAKE DETECTOR</h1>
-                <p>HYBRID CNN + HANDCRAFTED FEATURE INFERENCE</p>
+                <h1>Screen-Retake Image Verification</h1>
+                <p>Hybrid ResNet18 + Handcrafted Texture Feature Extraction</p>
             </div>
         </div>
         
@@ -754,30 +699,28 @@
     </header>
 
     <!-- Tab Selection Buttons -->
-    <div class="tabs-nav">
-        <button class="tab-btn active" id="btn-tab-scanner">LIVE SCANNER</button>
-        <button class="tab-btn" id="btn-tab-benchmarks">SYSTEM BENCHMARKS</button>
+    <div class="tabs-nav-container">
+        <div class="tabs-nav">
+            <button class="tab-btn active" id="btn-tab-scanner">LIVE SCANNER</button>
+            <button class="tab-btn" id="btn-tab-benchmarks">SYSTEM BENCHMARKS</button>
+        </div>
     </div>
 
     <!-- TAB 1: Live Scanner View -->
     <main id="live-scanner-tab" class="tab-content active">
         <!-- Left: Live Viewfinder -->
         <section class="camera-container">
-            <h2 class="card-title">
-                <svg width="16" height="16" fill="var(--color-cyan)" viewBox="0 0 16 16" style="margin-right: 0.25rem;">
-                    <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-                    <path d="M2 4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V4zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1H4z"/>
+            <h2 class="card-heading">
+                <svg width="16" height="16" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-top: -1px;">
+                    <path d="M9 12c0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3-3 1.34-3 3zm12-7.51h-3.24L16.2 2H7.8L6.24 4.49H3v13.02h18V4.49zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z" fill="#8e95a5"/>
                 </svg>
-                Live Viewfinder
+                Viewfinder Feed
             </h2>
             
             <div class="viewfinder-wrapper">
                 <video id="webcam" autoplay playsinline muted class="mirrored"></video>
                 <img id="uploaded-preview" style="display: none; width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 4; background: #000;">
-                <div class="scanner-line" id="scanner-line"></div>
-                <div class="scanner-grid"></div>
-                <div class="scanner-corners"></div>
-                <div class="scanner-corners-bottom"></div>
+                <div class="viewfinder-frame"></div>
                 
                 <div class="capturing-overlay" id="capturing-overlay">
                     <div class="spinner"></div>
@@ -786,32 +729,33 @@
             
             <div class="camera-controls">
                 <button class="btn" id="btn-capture" disabled>
-                    <svg width="18" height="18" fill="white" viewBox="0 0 24 24">
-                        <path d="M12 9c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3zm0-5c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9-4.03-9-9-9zm0 16c-3.86 0-7-3.14-7-7s3.14-7 7-7 7 3.14 7 7-3.14 7-7 7z"/>
+                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fill="none"/>
+                        <circle cx="12" cy="12" r="6" fill="currentColor"/>
                     </svg>
                     CAPTURE & ANALYZE
                 </button>
                 
                 <div class="camera-actions-row">
                     <button class="btn-sub" id="btn-switch-camera">
-                        <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
-                            <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M19 8l-4 4h3c0 3.31-2.69 6-6 6-1.01 0-1.97-.25-2.8-.7l-1.46 1.46C8.97 19.54 10.43 20 12 20c4.42 0 8-3.58 8-8h3l-4-4zM6 12c0-3.31 2.69-6 6-6 1.01 0 1.97.25 2.8.7l1.46-1.46C15.03 4.46 13.57 4 12 4c-4.42 0-8 3.58-8 8H1l4 4 4-4H6z"/>
                         </svg>
                         Switch Camera
                     </button>
                     
                     <button class="btn-sub" id="btn-reset-camera" style="display: none;">
-                        <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
                         </svg>
                         Reset Camera
                     </button>
                     
                     <button class="btn-sub" id="btn-select-file">
-                        <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/>
                         </svg>
-                        Select File
+                        Upload Photo
                     </button>
                 </div>
                 
@@ -825,31 +769,31 @@
             
             <!-- Realness Score Card -->
             <div class="card" id="card-prediction">
-                <h3 class="card-title">
-                    <svg width="16" height="16" fill="var(--color-cyan)" viewBox="0 0 24 24">
+                <h3 class="card-heading" style="margin-bottom: 1.5rem;">
+                    <svg width="16" height="16" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-top: -1px;">
                         <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/>
                     </svg>
-                    Image Realness Prediction
+                    Realness Evaluation
                 </h3>
                 
                 <div class="prediction-card">
                     <!-- Gauge -->
                     <div class="score-circle">
                         <svg>
-                            <circle class="circle-bg" cx="70" cy="70" r="65"></circle>
-                            <circle class="circle-progress" id="circle-progress" cx="70" cy="70" r="65"></circle>
+                            <circle class="circle-bg" cx="55" cy="55" r="50"></circle>
+                            <circle class="circle-progress" id="circle-progress" cx="55" cy="55" r="50"></circle>
                         </svg>
                         <div class="score-text">
                             <span class="score-percent" id="score-percent">--%</span>
-                            <span class="score-label">REALNESS</span>
+                            <span class="score-label">Realness</span>
                         </div>
                     </div>
                     
                     <!-- Result Badge -->
                     <div class="prediction-info">
-                        <div class="status-badge waiting" id="status-badge">Awaiting Capture</div>
+                        <div class="status-badge waiting" id="status-badge">Ready to Scan</div>
                         <div class="status-desc" id="status-desc">
-                            Press the capture button to take a live picture and submit it to the hybrid CNN classifier model.
+                            Point your camera at a subject and click capture, or upload a photo to verify if it is an original capture or a screen-retake presentation attack.
                         </div>
                     </div>
                 </div>
@@ -857,43 +801,47 @@
 
             <!-- Performance Parameters -->
             <div class="card">
-                <h3 class="card-title">
-                    <svg width="16" height="16" fill="var(--color-cyan)" viewBox="0 0 24 24">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
+                <h3 class="card-heading" style="margin-bottom: 1.25rem;">
+                    <svg width="16" height="16" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-top: -1px;">
+                        <path d="M21 10.12h-6.78l2.74-2.82c-2.73-2.7-7.15-2.67-9.84.1-2.68 2.77-2.68 7.26 0 10.03 2.69 2.77 7.11 2.8 9.84.1a6.834 6.834 0 001.93-4.81h2.19c0 2.2-.84 4.39-2.54 6.09-3.57 3.67-9.36 3.67-12.93 0-3.57-3.67-3.57-9.62 0-13.29 3.57-3.67 9.36-3.67 12.93 0l2.64-2.71V10.12zM13 7h-2v6h5v-2h-3V7z"/>
                     </svg>
-                    Performance Metrics
+                    Verification Speed
                 </h3>
-                <div class="metric-item">
-                    <span class="metric-label">Prediction Latency</span>
-                    <span class="metric-value cyan" id="metric-latency">-- ms</span>
-                    <span class="metric-comparison" id="latency-comparison">vs CPU baseline ~626 ms</span>
+                <div class="metric-grid">
+                    <div class="metric-item">
+                        <div class="metric-content">
+                            <span class="metric-label">Latency</span>
+                            <span class="metric-comparison" id="latency-comparison">vs CPU baseline ~626 ms</span>
+                        </div>
+                        <span class="metric-value" id="metric-latency">-- ms</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Estimated Cost Analysis -->
             <div class="card">
-                <h3 class="card-title">
-                    <svg width="16" height="16" fill="var(--color-cyan)" viewBox="0 0 24 24">
+                <h3 class="card-heading" style="margin-bottom: 1.25rem;">
+                    <svg width="16" height="16" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-top: -1px;">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
                     </svg>
-                    Cost Estimation at Scale
+                    Hosting Projections
                 </h3>
                 <table class="cost-table">
                     <thead>
                         <tr>
                             <th>Deployment Mode</th>
-                            <th>Cost per 1k</th>
-                            <th>Cost per 1M</th>
+                            <th>Per 1,000</th>
+                            <th>Per Million</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>On-Device (TFLite/CoreML)</td>
+                            <td>On-Device (Local app environment)</td>
                             <td class="cost-highlight on-device">$0.00</td>
                             <td class="cost-highlight on-device">$0.00</td>
                         </tr>
                         <tr>
-                            <td>AWS EC2 (VM t3.medium)</td>
+                            <td>AWS EC2 (t3.medium Dedicated VM)</td>
                             <td class="cost-highlight ec2" id="cost-ec2-1k">$0.0000</td>
                             <td class="cost-highlight ec2" id="cost-ec2-1m">$0.00</td>
                         </tr>
@@ -908,11 +856,11 @@
     <main id="benchmarks-tab" class="tab-content">
         <!-- Left: Static parameters list -->
         <section class="camera-container">
-            <h2 class="card-title">
-                <svg width="16" height="16" fill="var(--color-cyan)" viewBox="0 0 24 24">
+            <h2 class="card-heading">
+                <svg width="16" height="16" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-top: -1px;">
                     <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10H7v-2h10v2z"/>
                 </svg>
-                Standard Parameter Benchmarks
+                Benchmark Parameters
             </h2>
             
             <div class="bench-grid">
@@ -936,42 +884,42 @@
                             <span class="stats-value">999.81 ms</span>
                         </li>
                         <li class="stats-item">
-                            <span class="stats-label">Std Dev:</span>
+                            <span class="stats-label">Std Deviation:</span>
                             <span class="stats-value">206.33 ms</span>
                         </li>
                     </ul>
                 </div>
                 
                 <div class="bench-card">
-                    <h3 class="bench-heading">Hardware Environment</h3>
+                    <h3 class="bench-heading">System Specs</h3>
                     <ul class="stats-list">
                         <li class="stats-item">
-                            <span class="stats-label">CPU:</span>
-                            <span class="stats-value">11th Gen Intel i5-1155G7</span>
+                            <span class="stats-label">Processor:</span>
+                            <span class="stats-value">Intel Core i5-1155G7</span>
                         </li>
                         <li class="stats-item">
-                            <span class="stats-label">Device Type:</span>
+                            <span class="stats-label">Device Mode:</span>
                             <span class="stats-value">CPU (Single-threaded)</span>
                         </li>
                         <li class="stats-item">
-                            <span class="stats-label">OS:</span>
+                            <span class="stats-label">Environment:</span>
                             <span class="stats-value">Windows 11</span>
                         </li>
                         <li class="stats-item">
-                            <span class="stats-label">Python:</span>
+                            <span class="stats-label">Python Version:</span>
                             <span class="stats-value">3.13.5</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div class="bench-card" style="margin-top: 1rem;">
-                <h3 class="bench-heading">Methodology & Dataset</h3>
-                <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary);">
-                    Benchmarks were evaluated using the script <code>calculate_parameter.py</code> across the held-out testing partition containing exactly <strong>50 images</strong> (25 original real and 25 screen-retaken fakes). 
+            <div class="bench-card" style="margin-top: 1.5rem;">
+                <h3 class="bench-heading">Evaluation Methodology</h3>
+                <p style="font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary);">
+                    These benchmarks were calculated by running the offline tool <code>calculate_parameter.py</code> over our test set of exactly <strong>50 balanced images</strong> (25 real, 25 screen-retaken fakes).
                 </p>
-                <p style="font-size: 0.85rem; line-height: 1.5; color: var(--text-secondary); margin-top: 0.5rem;">
-                    To represent real-world use, the benchmarking includes loading images, executing local binary patterns (LBP) and gray-level co-occurrence matrix (GLCM) feature extractors at 512x512, fine-tuned ResNet18 forward passes, scaling operations, and support vector machine classification.
+                <p style="font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary); margin-top: 0.75rem;">
+                    Inference includes full image decoding, conversion of colour channels, resizing, ResNet18 forward embedding extraction, LBP and GLCM hand-crafted texture evaluation, and SVM classification.
                 </p>
             </div>
         </section>
@@ -979,16 +927,16 @@
         <!-- Right: Scale cost report based on benchmarks -->
         <section class="results-container">
             <div class="card">
-                <h3 class="card-title">
-                    <svg width="16" height="16" fill="var(--color-cyan)" viewBox="0 0 24 24">
+                <h3 class="card-heading" style="margin-bottom: 1.25rem;">
+                    <svg width="16" height="16" fill="var(--text-secondary)" viewBox="0 0 24 24" style="margin-top: -1px;">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/>
                     </svg>
-                    Benchmark Cost Projections
+                    Scalability Projections
                 </h3>
                 <table class="cost-table" style="margin-top: 1rem;">
                     <thead>
                         <tr>
-                            <th>Deployment Mode</th>
+                            <th>Deployment Option</th>
                             <th>Cost per 1k</th>
                             <th>Cost per 1M</th>
                         </tr>
@@ -1006,10 +954,10 @@
                         </tr>
                     </tbody>
                 </table>
-                <div style="font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary); margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
-                    <p><strong>Cost Hypotheses:</strong></p>
-                    <p><strong>On-Device:</strong> Assumes model runtime runs locally inside standard client application sandbox environment. Free execution for developer (uses user hardware and battery).</p>
-                    <p><strong>AWS EC2 Instance:</strong> Assumes a dedicated <code>t3.medium</code> instance running at full capability ($0.0416/hour VM fee). Max request throughput computed as <code>(1.0 / mean_latency_seconds) * 1.5</code> thread-scaling factor yielding <strong>~8,626 requests per hour</strong>.</p>
+                <div style="font-size: 0.8rem; line-height: 1.6; color: var(--text-secondary); margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;">
+                    <p><strong>Deployment Assumptions:</strong></p>
+                    <p><strong>On-Device:</strong> Run directly on client hardware (TFLite in native Android/iOS container, or CoreML). Incurs $0.00 hosting cost since execution is delegated to user CPU/NPU hardware.</p>
+                    <p><strong>AWS EC2 VM:</strong> Assumes a dedicated <code>t3.medium</code> instance running at full capacity ($0.0416/hour). Request throughput computed using a <code>1.5</code> thread-scaling factor yielding <strong>~8,626 request verifications per hour</strong>.</p>
                 </div>
             </div>
         </section>
@@ -1017,8 +965,8 @@
 
     <footer>
         <div class="footer-content">
-            <span>FakeImageProject Presentation Attack Detection System</span>
-            <span id="footer-hardware-details">Hybrid Feature Fusion Framework v1.0</span>
+            <span>FakeImageProject Verification System</span>
+            <span id="footer-hardware-details">ResNet18 + Texture Fusion</span>
         </div>
     </footer>
 
@@ -1028,7 +976,6 @@
         const snapshot = document.getElementById('snapshot');
         const btnCapture = document.getElementById('btn-capture');
         const capturingOverlay = document.getElementById('capturing-overlay');
-        const scannerLine = document.getElementById('scanner-line');
         const scorePercent = document.getElementById('score-percent');
         const circleProgress = document.getElementById('circle-progress');
         const statusBadge = document.getElementById('status-badge');
@@ -1066,8 +1013,8 @@
         btnTabBenchmarks.addEventListener('click', activateBenchmarksTab);
 
         // SVG Circle Circumference
-        const radius = 65;
-        const circumference = 2 * Math.PI * radius; // ~408.4
+        const radius = 50;
+        const circumference = 2 * Math.PI * radius; // ~314.16
 
         // Preload System Hardware info from Backend
         fetch('/api/system_info')
@@ -1119,12 +1066,10 @@
                     webcam.play()
                         .then(() => {
                             btnCapture.disabled = false;
-                            scannerLine.style.display = 'block';
                         })
                         .catch(playErr => {
                             console.error("Autoplay failed, forcing controls:", playErr);
                             btnCapture.disabled = false;
-                            scannerLine.style.display = 'block';
                         });
                 };
             })
@@ -1251,7 +1196,7 @@
                 circleProgress.style.stroke = "var(--color-real)";
                 cardPrediction.style.border = "1px solid rgba(16, 185, 129, 0.2)";
             } else if (score >= 0.4) {
-                circleProgress.style.stroke = "var(--font-orange, #f59e0b)";
+                circleProgress.style.stroke = "var(--color-warning)";
                 cardPrediction.style.border = "1px solid rgba(245, 158, 11, 0.2)";
             } else {
                 circleProgress.style.stroke = "var(--color-fake)";
