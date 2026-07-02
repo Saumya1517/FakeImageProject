@@ -13,8 +13,6 @@ __pycache__/
 # Intermediate dataset and preprocessed splits
 data/
 
-# Model checkpoints and trained weights
-models/
 
 # Generated evaluation plots and reports
 plots/
