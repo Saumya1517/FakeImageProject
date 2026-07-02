@@ -240,7 +240,11 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transform: scaleX(-1); /* mirror effect */
+            transition: transform 0.4s ease;
+        }
+
+        #webcam.mirrored {
+            transform: scaleX(-1);
         }
 
         /* Scan Line Overlay Effect */
@@ -356,6 +360,42 @@
             box-shadow: none;
             cursor: not-allowed;
             color: var(--text-secondary);
+        }
+
+        .camera-actions-row {
+            display: flex;
+            gap: 1rem;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .btn-sub {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--card-border);
+            color: var(--text-primary);
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-sub:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--color-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.15);
+            color: #ffffff;
+        }
+
+        .btn-sub:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
 
         /* Results & Metrics Panel */
@@ -732,7 +772,8 @@
             </h2>
             
             <div class="viewfinder-wrapper">
-                <video id="webcam" autoplay playsinline muted></video>
+                <video id="webcam" autoplay playsinline muted class="mirrored"></video>
+                <img id="uploaded-preview" style="display: none; width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; z-index: 4; background: #000;">
                 <div class="scanner-line" id="scanner-line"></div>
                 <div class="scanner-grid"></div>
                 <div class="scanner-corners"></div>
@@ -750,6 +791,31 @@
                     </svg>
                     CAPTURE & ANALYZE
                 </button>
+                
+                <div class="camera-actions-row">
+                    <button class="btn-sub" id="btn-switch-camera">
+                        <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                            <path d="M16 17.01V10h-2v7.01h-3L15 21l4-3.99h-3zM9 3L5 6.99h3V14h2V6.99h3L9 3z"/>
+                        </svg>
+                        Switch Camera
+                    </button>
+                    
+                    <button class="btn-sub" id="btn-reset-camera" style="display: none;">
+                        <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                            <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+                        </svg>
+                        Reset Camera
+                    </button>
+                    
+                    <button class="btn-sub" id="btn-select-file">
+                        <svg width="16" height="16" fill="white" viewBox="0 0 24 24">
+                            <path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/>
+                        </svg>
+                        Select File
+                    </button>
+                </div>
+                
+                <input type="file" id="file-input" accept="image/*" style="display: none;">
                 <canvas id="snapshot" width="640" height="480" style="display: none;"></canvas>
             </div>
         </section>
@@ -1015,35 +1081,132 @@
                 badgeDeviceLabel.textContent = "Offline Model Server";
             });
 
+        const btnSwitchCamera = document.getElementById('btn-switch-camera');
+        const btnResetCamera = document.getElementById('btn-reset-camera');
+        const btnSelectFile = document.getElementById('btn-select-file');
+        const fileInput = document.getElementById('file-input');
+        const uploadedPreview = document.getElementById('uploaded-preview');
+
+        let currentStream = null;
+        let currentFacingMode = "user"; // "user" or "environment"
+
         // Initialize Webcam stream
-        navigator.mediaDevices.getUserMedia({ 
-            video: { 
-                width: { ideal: 640 }, 
-                height: { ideal: 480 },
-                facingMode: "user" 
-            }, 
-            audio: false 
-        })
-        .then(stream => {
-            webcam.srcObject = stream;
-            webcam.onloadedmetadata = () => {
-                webcam.play()
-                    .then(() => {
-                        btnCapture.disabled = false;
-                        scannerLine.style.display = 'block';
-                    })
-                    .catch(playErr => {
-                        console.error("Autoplay failed, forcing controls:", playErr);
-                        btnCapture.disabled = false;
-                        scannerLine.style.display = 'block';
-                    });
+        function startWebcam(facingMode) {
+            // Stop any existing stream
+            if (currentStream) {
+                currentStream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Adjust mirror class
+            if (facingMode === "user") {
+                webcam.classList.add('mirrored');
+            } else {
+                webcam.classList.remove('mirrored');
+            }
+            
+            return navigator.mediaDevices.getUserMedia({
+                video: {
+                    width: { ideal: 640 },
+                    height: { ideal: 480 },
+                    facingMode: facingMode
+                },
+                audio: false
+            })
+            .then(stream => {
+                currentStream = stream;
+                webcam.srcObject = stream;
+                webcam.onloadedmetadata = () => {
+                    webcam.play()
+                        .then(() => {
+                            btnCapture.disabled = false;
+                            scannerLine.style.display = 'block';
+                        })
+                        .catch(playErr => {
+                            console.error("Autoplay failed, forcing controls:", playErr);
+                            btnCapture.disabled = false;
+                            scannerLine.style.display = 'block';
+                        });
+                };
+            })
+            .catch(err => {
+                console.error("Camera access failed", err);
+                statusBadge.textContent = "Camera Error";
+                statusBadge.className = "status-badge fake";
+                statusDesc.textContent = "Could not access webcam. Please check browser permissions or connect a camera.";
+            });
+        }
+
+        // Load default webcam facing mode
+        startWebcam(currentFacingMode);
+
+        // Switch Camera handler
+        btnSwitchCamera.addEventListener('click', () => {
+            currentFacingMode = currentFacingMode === "user" ? "environment" : "user";
+            startWebcam(currentFacingMode);
+        });
+
+        // Trigger file input
+        btnSelectFile.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // Handle selected file upload
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const base64Data = event.target.result;
+                
+                // Show uploaded image preview inside viewfinder
+                uploadedPreview.src = base64Data;
+                uploadedPreview.style.display = 'block';
+                webcam.style.display = 'none';
+                
+                // Stop the active camera stream to free up resources
+                if (currentStream) {
+                    currentStream.getTracks().forEach(track => track.stop());
+                    currentStream = null;
+                }
+                
+                // Toggle sub-action button rows
+                btnSwitchCamera.style.display = 'none';
+                btnResetCamera.style.display = 'flex';
+                btnCapture.disabled = true;
+                
+                // Run prediction on uploaded file immediately
+                analyzeBase64Image(base64Data.split(',')[1]);
             };
-        })
-        .catch(err => {
-            console.error("Camera access failed", err);
-            statusBadge.textContent = "Camera Error";
-            statusBadge.className = "status-badge fake";
-            statusDesc.textContent = "Could not access webcam. Please check browser permissions or connect a camera.";
+            reader.readAsDataURL(file);
+        });
+
+        // Reset camera state back to live stream
+        btnResetCamera.addEventListener('click', () => {
+            uploadedPreview.style.display = 'none';
+            uploadedPreview.src = "";
+            webcam.style.display = 'block';
+            
+            // Re-initialize webcam stream
+            startWebcam(currentFacingMode);
+            
+            // Reset button visibility
+            btnResetCamera.style.display = 'none';
+            btnSwitchCamera.style.display = 'flex';
+            
+            // Clear predictions and reset gauge
+            updateGauge(0);
+            scorePercent.textContent = "--%";
+            statusBadge.textContent = "Awaiting Capture";
+            statusBadge.className = "status-badge waiting";
+            statusDesc.textContent = "Press the capture button to take a live picture and submit it to the hybrid CNN classifier model.";
+            metricLatency.textContent = "-- ms";
+            latencyComparison.textContent = "vs CPU baseline ~626 ms";
+            costEc21k.textContent = "$0.0000";
+            costEc21m.textContent = "$0.00";
+            
+            // Reset file input value
+            fileInput.value = "";
         });
 
         // Update Score Gauge UI
@@ -1067,42 +1230,27 @@
             }
         }
 
-        // Capture Snapshot and Analyze
-        btnCapture.addEventListener('click', () => {
-            // 1. Show processing status
+        // Shared Image prediction function
+        function analyzeBase64Image(base64Str) {
             capturingOverlay.classList.add('active');
-            btnCapture.disabled = true;
             statusBadge.textContent = "Analyzing...";
             statusBadge.className = "status-badge waiting";
-            statusDesc.textContent = "Uploading captured image to the CNN backend and extracting handcrafted feature vector (entropy, GLCM textures, FFT spectra, sharpness)...";
+            statusDesc.textContent = "Uploading image to the CNN backend and extracting handcrafted feature vector (entropy, GLCM textures, FFT spectra, sharpness)...";
 
-            // 2. Draw current frame to canvas
-            const ctx = snapshot.getContext('2d');
-            ctx.translate(snapshot.width, 0);
-            ctx.scale(-1, 1);
-            ctx.drawImage(webcam, 0, 0, snapshot.width, snapshot.height);
-            ctx.setTransform(1, 0, 0, 1, 0, 0); // reset scale/translate
-
-            // 3. Convert image to base64
-            const dataUrl = snapshot.toDataURL('image/jpeg', 0.85);
-            const base64Data = dataUrl.split(',')[1];
-
-            // 4. Send API POST Request
             fetch('/api/predict', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: base64Data })
+                body: JSON.stringify({ image: base64Str })
             })
             .then(res => res.json())
             .then(data => {
                 capturingOverlay.classList.remove('active');
-                btnCapture.disabled = false;
 
                 if (!data.success) {
                     throw new Error(data.error || "Unknown server error");
                 }
 
-                // 5. Update Prediction Gauge and status
+                // Update Prediction Gauge and status
                 const score = data.confidence_real;
                 updateGauge(score);
 
@@ -1116,7 +1264,7 @@
                     statusDesc.innerHTML = `Model predicts this is a <strong>SCREEN-RETAKEN FAKE</strong>. Realness confidence is only ${Math.round(score*100)}% (threshold used: ${data.decision_threshold}).`;
                 }
 
-                // 6. Update Latency Metric
+                // Update Latency Metric
                 const latency = data.latency_ms;
                 metricLatency.textContent = `${latency.toFixed(1)} ms`;
                 
@@ -1128,9 +1276,7 @@
                     latencyComparison.textContent = `${ratio}x faster than 626ms CPU baseline (high-res)`;
                 }
 
-                // 7. Update Costs Dynamically
-                // AWS EC2 VM hourly cost: $0.0416 (t3.medium).
-                // Concurrency speedup assume 1.5x throughput.
+                // Update Costs Dynamically
                 const latencySec = latency / 1000.0;
                 const throughputHour = (1.0 / latencySec) * 1.5 * 3600;
                 const ec2ImageTotal = 0.0416 / throughputHour;
@@ -1142,12 +1288,36 @@
             })
             .catch(err => {
                 capturingOverlay.classList.remove('active');
-                btnCapture.disabled = false;
                 console.error("API error", err);
                 statusBadge.textContent = "Analysis Failed";
                 statusBadge.className = "status-badge fake";
                 statusDesc.textContent = `Error: ${err.message}. Please verify the backend is running.`;
             });
+        }
+
+        // Capture Snapshot from Live Camera and Analyze
+        btnCapture.addEventListener('click', () => {
+            btnCapture.disabled = true;
+
+            const ctx = snapshot.getContext('2d');
+            
+            // Mirror image draw if using front camera
+            if (currentFacingMode === "user") {
+                ctx.translate(snapshot.width, 0);
+                ctx.scale(-1, 1);
+                ctx.drawImage(webcam, 0, 0, snapshot.width, snapshot.height);
+                ctx.setTransform(1, 0, 0, 1, 0, 0); // reset transform
+            } else {
+                ctx.drawImage(webcam, 0, 0, snapshot.width, snapshot.height);
+            }
+
+            // Convert image to base64
+            const dataUrl = snapshot.toDataURL('image/jpeg', 0.85);
+            const base64Data = dataUrl.split(',')[1];
+
+            analyzeBase64Image(base64Data);
+            
+            btnCapture.disabled = false;
         });
     </script>
 </body>
