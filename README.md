@@ -1,21 +1,26 @@
-::: {align="center"}
-# 👁️ AuthentiVision
+<h1 align="center">👁️ AuthentiVision</h1>
 
-### **Hybrid Feature Fusion for Screen-Retake Image Detection**
+<p align="center">
+<b>Hybrid Feature Fusion for Screen-Retake Image Detection</b>
+</p>
 
-*Detect • Verify • Protect*
+<p align="center">
+<i>Detect • Verify • Protect</i>
+</p>
 
-![Python](https://img.shields.io/badge/Python-3.13-blue?logo=python)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red?logo=pytorch)
-![OpenCV](https://img.shields.io/badge/OpenCV-Computer%20Vision-green?logo=opencv)
-![Flask](https://img.shields.io/badge/Flask-Web%20Application-black?logo=flask)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-SVM-orange?logo=scikitlearn)
-![License](https://img.shields.io/badge/License-MIT-success)
-:::
+
 
 ------------------------------------------------------------------------
 
-# 📌 Overview
+
+
+# 🚀 Live Demo
+
+🔗 https://fakeimageproject.onrender.com
+
+------------------------------------------------------------------------
+
+# • Overview
 
 **AuthentiVision** is a hybrid AI framework for detecting
 **Screen-Retake (Presentation Attack)** images.
@@ -23,9 +28,9 @@
 Unlike conventional image classifiers that rely only on deep learning,
 AuthentiVision combines:
 
--   🧠 Deep CNN Features (ResNet18)
--   🔍 Handcrafted Texture Features
--   ⚡ Support Vector Machine (SVM)
+-  Deep CNN Features (ResNet18)
+-  Handcrafted Texture Features
+-  Support Vector Machine (SVM)
 
 This hybrid architecture enables the system to detect subtle spoofing
 artifacts such as:
@@ -41,7 +46,7 @@ Authentication**, and **Presentation Attack Detection**.
 
 ------------------------------------------------------------------------
 
-# 🎯 Motivation
+# • Motivation
 
 Presentation attacks are one of the major security threats in digital
 identity verification.
@@ -52,13 +57,13 @@ displayed on a phone, laptop, tablet, or monitor.
 While humans can often recognize screen artifacts, conventional CNNs
 tend to focus on semantic information rather than fine-grained texture.
 
-AuthentiVision addresses this limitation through **Hybrid Feature
-Fusion**, combining deep semantic understanding with handcrafted optical
+AuthentiVision addresses this limitation through Hybrid Feature
+Fusion, combining deep semantic understanding with handcrafted optical
 descriptors.
 
 ------------------------------------------------------------------------
 
-# 🏗️ Hybrid Pipeline
+# • Hybrid Pipeline
 
 ``` text
                   Input Image
@@ -98,29 +103,29 @@ descriptors.
 
 ------------------------------------------------------------------------
 
-# ✨ Features
+# • Features
 
--   📷 Live Webcam Scanner
--   📂 Image Upload
--   🔄 Front / Back Camera Switching
--   📉 Client-side Image Compression
--   ⚡ Optimized CPU Inference
--   ☁️ Cloud-Friendly Deployment
--   📊 Latency Benchmark Dashboard
--   💰 Cost Estimation
--   🌙 Responsive Dark UI
+-    Live Webcam Scanner
+-    Image Upload
+-    Front / Back Camera Switching
+-    Client-side Image Compression
+-    Optimized CPU Inference
+-    Cloud-Friendly Deployment
+-    Latency Benchmark Dashboard
+-    Cost Estimation
+-    Responsive Dark UI
 
 ------------------------------------------------------------------------
 
-# 🧠 Feature Engineering
+# • Feature Engineering
 
-## Deep Learning
+##  Deep Learning
 
 -   Fine-tuned ResNet18
 -   Identity head removed
 -   512-dimensional embeddings
 
-## Handcrafted Features
+##  Handcrafted Features
 
 ### Frequency Analysis
 
@@ -144,46 +149,46 @@ descriptors.
 
 ------------------------------------------------------------------------
 
-# 📊 Dataset
+# • Dataset
 
 To prevent train-test leakage:
 
--   ✅ dHash similarity checking
--   ✅ Group-stratified splitting
+-  dHash similarity checking
+-  Group-stratified splitting
 
-  Split          Real   Fake
-  ------------ ------ ------
-  Train            40     40
-  Validation       10     10
-  Test             25     25
-
-------------------------------------------------------------------------
-
-# ⚙️ Performance
-
-  Metric                     Value
-  ---------------- ---------------
-  Mean Latency       **625.99 ms**
-  Median Latency     **662.41 ms**
-  Minimum            **123.72 ms**
-  Maximum            **999.81 ms**
-  Threshold               **0.40**
+| Dataset Split | Real Images | Fake Images | Total |
+|---------------|------------:|------------:|------:|
+| Train         | 40          | 40          | 80    |
+| Validation    | 10          | 10          | 20    |
+| Test          | 25          | 25          | 50    |
 
 ------------------------------------------------------------------------
 
-# 💵 Deployment Cost
+# • Performance
 
-  Platform                        Cost
-  --------------------- --------------
-  On Device                 **\$0.00**
-  AWS EC2 (1K Images)     **\$0.0048**
-  AWS EC2 (1M Images)       **\$4.82**
+| Metric | Value |
+|--------|------:|
+| Mean Latency | **625.99 ms** |
+| Median Latency | **662.41 ms** |
+| Minimum Latency | **123.72 ms** |
+| Maximum Latency | **999.81 ms** |
+| Classification Threshold | **0.40** |
 
 ------------------------------------------------------------------------
 
-# 🌐 Web Dashboard
+# • Deployment Cost
 
-### 📷 Live Scanner
+| Deployment Platform | Estimated Cost |
+|---------------------|---------------:|
+| On-Device Inference | **$0.00** |
+| AWS EC2 (1,000 Images) | **$0.0048** |
+| AWS EC2 (1,000,000 Images) | **$4.82** |
+
+------------------------------------------------------------------------
+
+# • Web Dashboard
+
+### Live Scanner
 
 -   Live webcam detection
 -   Real-time prediction
@@ -191,7 +196,7 @@ To prevent train-test leakage:
 -   Latency measurement
 -   Cost estimator
 
-### 📈 System Benchmarks
+### System Benchmarks
 
 -   Hardware specifications
 -   Latency statistics
@@ -200,12 +205,13 @@ To prevent train-test leakage:
 
 ------------------------------------------------------------------------
 
-# 📁 Project Structure
+# • Project Structure
 
 ``` text
 AuthentiVision/
 │
 ├── models/
+├── iamges/
 ├── templates/
 ├── train/
 ├── test/
@@ -227,7 +233,7 @@ AuthentiVision/
 
 ------------------------------------------------------------------------
 
-# 🚀 Installation
+# • Installation
 
 ``` bash
 git clone https://github.com/Saumya1517/FakeImageProject.git
@@ -241,33 +247,27 @@ python app.py
 
 ------------------------------------------------------------------------
 
-# 🖼️ Demo
 
-Replace these with screenshots from your project.
+<h1> • Project Demo</h1>
 
-``` text
-docs/
- ├── homepage.png
- ├── live-scanner.png
- ├── prediction.png
- └── benchmark.png
-```
+<p align="center">
+<img src="images/real_prediction.jpeg" width="43.7%">
+<img src="images/fake_prediction.jpeg" width="45%">
+</p>
 
-Example:
+<p align="center">
+<img src="images/benchmark.jpeg" width="47%">
+</p>
 
-``` md
-![Home](docs/homepage.png)
-
-![Scanner](docs/live-scanner.png)
-
-![Prediction](docs/prediction.png)
-
-![Benchmarks](docs/benchmark.png)
-```
+<p align="center">
+<b>Left:</b> Real image detection &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+<b>Right:</b> Screen-retake detection &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+<b>Bottom:</b> System benchmark dashboard
+</p>
 
 ------------------------------------------------------------------------
 
-# 🛠️ Tech Stack
+# • Tech Stack
 
 -   Python
 -   PyTorch
@@ -281,11 +281,10 @@ Example:
 
 ------------------------------------------------------------------------
 
-# 🔮 Future Improvements
+# • Future Improvements
 
 -   MobileNetV3 deployment
 -   Quantization
--   ONNX export
 -   TensorRT optimization
 -   Larger multi-device dataset
 -   Video-based spoof detection
@@ -293,22 +292,6 @@ Example:
 
 ------------------------------------------------------------------------
 
-# 👩‍💻 Author
 
-**Saumya Agarwal**
-
-B.Tech Computer Science Engineering
-
-Jaypee Institute of Information Technology
-
-GitHub: https://github.com/Saumya1517
-
-------------------------------------------------------------------------
-
-::: {align="center"}
-## ⭐ If you found this project useful, please consider giving it a Star!
-
-Made with ❤️ using PyTorch, OpenCV & Flask.
-:::
-
+### ⭐ If you found this project useful, please consider giving it a Star!
 
