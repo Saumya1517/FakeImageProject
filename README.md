@@ -23,7 +23,7 @@
 # • Overview
 
 **AuthentiVision** is a hybrid AI framework for detecting
-**Screen-Retake (Presentation Attack)** images.
+Screen-Retake (Presentation Attack) images.
 
 Unlike conventional image classifiers that rely only on deep learning,
 AuthentiVision combines:
@@ -41,8 +41,8 @@ artifacts such as:
 -   Artificial sharpness
 -   Frequency-domain inconsistencies
 
-making it suitable for **KYC**, **Identity Verification**, **Face
-Authentication**, and **Presentation Attack Detection**.
+making it suitable for KYC, Identity Verification, Face
+Authentication, and Presentation Attack Detection.
 
 ------------------------------------------------------------------------
 
